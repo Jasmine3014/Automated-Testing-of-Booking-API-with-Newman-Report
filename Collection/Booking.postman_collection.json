@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "e3d6fd06-4a85-46a0-9c18-5c1756b58ea2",
+		"name": "Booking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33654656"
+	},
+	"item": [
+		{
+			"name": "Create Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsondata= pm.response.json()\r",
+							"pm.environment.set(\"id\", jsondata.bookingid)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var firstname = pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"console.log(firstname)\r",
+							"pm.environment.set(\"firstname\", firstname)\r",
+							"\r",
+							"var lastname = pm.variables.replaceIn(\"{{$randomLastName}}\")\r",
+							"console.log(lastname)\r",
+							"pm.environment.set(\"lastname\", lastname)\r",
+							"\r",
+							"var totalprice = pm.variables.replaceIn(\"{{$randomPrice}}\")\r",
+							"console.log(totalprice)\r",
+							"pm.environment.set(\"totalprice\",parseInt(totalprice))\r",
+							"\r",
+							"var depositpaid = pm.variables.replaceIn(\"{{$randomBoolean}}\")\r",
+							"console.log(depositpaid)\r",
+							"pm.environment.set(\"depositpaid\", depositpaid)\r",
+							"\r",
+							"var additionalneeds = pm.variables.replaceIn(\"{{$randomAlphaNumeric}}\")\r",
+							"console.log(additionalneeds)\r",
+							"pm.environment.set(\"additionalneeds\",(additionalneeds))\r",
+							"\r",
+							"\r",
+							"const date = require(\"moment\")\r",
+							"const today = date()\r",
+							"// console.log (today.format(\"YYYY-DD-MM\"))\r",
+							"var checkin = today.add(11,'d').format(\"YYYY-MM-DD\")\r",
+							"console.log (checkin)\r",
+							"pm.environment.set(\"checkin\", checkin)\r",
+							"\r",
+							"var checkout = today.add(15,'d').format(\"YYYY-MM-DD\")\r",
+							"console.log (checkout)\r",
+							"pm.environment.set(\"checkout\", checkout)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"firstname\" : \"{{firstname}}\",\r\n\t\"lastname\" : \"{{lastname}}\",\r\n\t\"totalprice\" : {{totalprice}},\r\n\t\"depositpaid\" : {{depositpaid}},\r\n\t\"bookingdates\" : {\r\n    \t\"checkin\" : \"{{checkin}}\",\r\n    \t\"checkout\" : \"{{checkout}}\"\r\n\t},\r\n\t\"additionalneeds\" : \"{{additionalneeds}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/booking/",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"booking",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsondata= pm.response.json()\r",
+							"pm.test(\"Fitst name validation\",function(){\r",
+							" pm.expect(pm.environment.get(\"firstname\")).to.eql(jsondata.firstname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Last name validation\",function(){\r",
+							" pm.expect(pm.environment.get(\"lastname\")).to.eql(jsondata.lastname)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Depositpaid validation\",function(){\r",
+							" pm.expect(pm.environment.get(\"depositpaid\")).to.eql(jsondata.depositpaid.toString())\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Totalprice validation\", function(){\r",
+							" pm.expect(pm.environment.get(\"totalprice\")).to.eql(jsondata.totalprice)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Additionalneeds validation\", function(){\r",
+							" pm.expect(pm.environment.get(\"additionalneeds\")).to.eql(jsondata.additionalneeds)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Checkin validation\", function(){\r",
+							" pm.expect(pm.environment.get(\"checkin\")).to.eql(jsondata.bookingdates.checkin)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Checkout validation\", function(){\r",
+							" pm.expect(pm.environment.get(\"checkout\")).to.eql(jsondata.bookingdates.checkout)\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/booking/{{id}}",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Booking",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token=0e8ecdb3d64ea79",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"firstname\" : \"James\",\r\n\t\"lastname\" : \"Brown\",\r\n\t\"totalprice\" : 111,\r\n\t\"depositpaid\" : true,\r\n\t\"bookingdates\" : {\r\n    \t\"checkin\" : \"2018-01-01\",\r\n    \t\"checkout\" : \"2019-01-01\"\r\n\t},\r\n\t\"additionalneeds\" : \"Breakfast\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/booking/{{id}}",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"booking",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsondata= pm.response.json()\r",
+							"pm.environment.set(\"token\", jsondata.token)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"username\": \"admin\",\r\n\t\"password\": \"password123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/auth",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

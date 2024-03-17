@@ -67,7 +67,7 @@ This project demonstrates API testing using Postman, providing a collection of t
 ### Request Method: POST
 ### Pre-request Script:
 ```console 
-    var firstname = pm.variables.replaceIn("{{$randomFirstName}}")
+var firstname = pm.variables.replaceIn("{{$randomFirstName}}")
 console.log(firstname)
 pm.environment.set("firstname", firstname)
 
